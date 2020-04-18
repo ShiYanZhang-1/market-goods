@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+</head>
+<link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+<script th:src="@{/layui/layui.js}"></script>
+<body>
+    <div style="position: absolute;left: 0;right: 0;top: 0;bottom: 0;">
+        <div style="display: flex;justify-content: center;margin-top: 15%;">
+            <form class="layui-form" method="post" th:action="@{/pages/front/login}" lay-filter="example" style="border: solid blueviolet 1px;padding: 20px;border-radius: 10px;box-shadow: 0 0 10px rgba(255,0,0,0.5);">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">登录手机</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">登录密码</label>
+                        <div class="layui-input-inline">
+                            <input type="password" name="password" lay-verify="required|phone" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item" style="text-align: center">
+                    <span style="color: red" th:text="${errMsg}"></span>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" style="background-color: blueviolet" class="layui-btn layui-btn-radius layui-btn-normal" lay-submit="" lay-filter="demo1">立即提交</button>
+                        <button type="reset"  class="layui-btn layui-btn-radius layui-btn-primary" id="LAY-component-form-setval">重置</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <title>首页</title>
+    <style>
+        #item_title:hover{
+            color:red;
+            cursor: pointer;
+        }
+        #login_btn:hover{
+            color:red;
+            cursor: pointer;
+        }
+        [id^=type_]:hover{
+            color:red;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body style="padding: 20px">
+<!--头部-->
+<div style="display: flex;align-items: center;">
+    <div style="width: 40%">
+        <img src="/images/index/logo.png"/>
+    </div>
+    <div style="width: 40%">
+        <div style="display: flex;border: solid red 2px;">
+            <div style="width: 80%;">
+                <input type="text" style="height: 30px;border: none;width: 100%;">
+            </div>
+            <div style="color: white ;background: red;padding: 5px 30px;width: 20%;text-align: center;">
+                搜索
+            </div>
+        </div>
+
+    </div>
+    <div style="cursor: pointer;width: 20%;text-align: center;border: solid lightgray 1px;background: rgb(245,245,245);padding: 6px;color: red;margin-left: 50px;">
+        我的购物车
+    </div>
+    <div onclick="window.location.href='/pages/front/loginPage'" id="login_btn" style="width: 50px;text-align: center;border: solid lightgray 1px;background: rgb(245,245,245);padding: 6px;margin-left: 50px;">
+        登录
+    </div>
+</div>
+
+<div style="display: flex;">
+    <!--左侧菜单栏-->
+    <div style="width: 20%;border: solid grey;"  >
+        <div style="display: flex;" th:each="t : ${typeList}">
+            <div style="margin:5px 5px;font-weight: bold" th:text="${t.typeName+':'}">
+                电子残品
+            </div>
+            <div style="display: flex;flex-wrap: wrap;">
+                <div th:id="type_+${ct.goodsTypeId}" style="margin:5px 5px" th:each="ct : ${t.childrenTypes}" th:text="${ct.typeName}">手机</div>
+            </div>
+        </div>
+    </div>
+    <!--右侧详情信息栏-->
+    <div style="width: 80%;border: solid grey;display: flex;flex-wrap: wrap ;padding: 20px 10px;" id="goodsDiv">
+       <!-- <div style="padding: 20px;margin:20px 10px;border:solid lightgray 1px;width: 20%; box-shadow: 0 0 5px lightgray;"  th:each="x:${#numbers.sequence(1,30)}">
+            <div style="text-align: center;">
+                <img src="/images/index/phone.jpeg" style="width: 100%;">
+            </div>
+            <div>
+                价格：<span style="color: orangered;size: 20px;">￥1000</span>
+            </div>
+            <div id="item_title">
+                Apple iPhone 11 (A2223) 128GB 黑色 移动联通电信4G手机 双卡双待
+            </div>
+            <div style="color: chocolate;font-size: 16px;font-weight: bold;padding: 5px;">
+                77万+<span style="color: gray;">评价</span>
+            </div>
+            <div style="color: gray;font-size: 14px;">
+                按回款速度和环境超市
+            </div>
+        </div>-->
+    </div>
+</div>
+<script th:src="@{/layui/layui.js}"></script>
+<!--  <script th:src="@{/layui/jquery-3.4.1.min.js}"></script>-->
+<script type="text/javascript" th:inline="javascript">
+    layui.use(['jquery', 'layer','form','table'], function(){
+        let $ = layui.$ //重点处
+            ,layer = layui.layer
+            ,table=layui.table
+            ,form=layui.form;
+
+
+        $(function(){
+            $("[id^=type_]").click(function(){
+               let typeid = this.id.split("_")[1];
+
+                $("[id^=type_]").css({color: "black"})
+
+               $(this).css({color: "red"});
+
+               $.post(
+                   '/pages/back/goods/getGoodsBytypiId/'+ typeid,
+                   {},
+                   function (res) {
+                       let goodsDiv =  $("#goodsDiv");
+                       goodsDiv.empty();
+                       if(res.res){
+                           let data = res.data;
+                           for (let i = 0; i <data.length ; i++) {
+                               let g = data[i];
+                               let goodsItem = $(" <div style=\"padding: 20px;margin:20px 10px;border:solid lightgray 1px;width: 20%; box-shadow: 0 0 5px lightgray;\" >\n" +
+                                    "                                    <div style=\"text-align: center;\">\n" +
+                                    "                                    <img src='/images"+g.img+"' style=\"width: 100%;\">\n" +
+                                    "                                    </div>\n" +
+                                    "                                    <div>\n" +
+                                    "                                    价格：<span style=\"color: orangered;size: 20px;\">"+g.price+"</span>\n" +
+                                    "                                    </div>\n" +
+                                    "                                    <div id=\"item_title\">\n" +
+                                    "                                           "+g.title+"\n" +
+                                    "                                </div>\n" +
+                                    "                                <div style=\"color: chocolate;font-size: 16px;font-weight: bold;padding: 5px;\">\n" +
+                                    "                                    "+g.evaluationCount+"<span style=\"color: gray;\">万+评价</span>\n" +
+                                    "                                    </div>\n" +
+                                    "                                    <div style=\"color: gray;font-size: 14px;\">"+g.merchantName+"</div>\n" +
+                                    "                                ");
+                                goodsDiv.append(goodsItem);
+                               goodsItem.click(function () {
+                                    window.location="/pages/front/goods/goodsDetail/"+g.goodsId;
+                               });
+
+                            }
+                        }
+                   }
+               )
+            });
+        });
+
+        $("[id^=type_]:eq(0)").click();
+    });
+</script>
+</body>
+</html>

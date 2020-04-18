@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <style>
+        .w-e-text-container{
+            height: 700px !important;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    添加商品
+</h1>
+<form class="layui-form" id="typeForm" type="post">
+    <div style="display: flex">
+        <!--左边信息栏-->
+        <div style="padding: 20px;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">上级类型</label>
+                <div class="layui-input-block" style="width: 200px;">
+                    <select name="parentTypeId" lay-filter="aihao">
+                        <option value="-1" selected="">一级类型</option>
+                        <option th:value="${t.goodsTypeId}" th:each="t: ${typeList}" th:text="${t.typeName}">写作</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" >类型名称</label>
+                    <div class="layui-input-inline"  style="width: 200px;">
+                        <input type="text" lay-verify="title" autocomplete="off" placeholder="请输入名称" name="typeName"  class="layui-input" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">排序序号</label>
+                    <div class="layui-input-inline"  style="width: 200px;">
+                        <input type="text" lay-verify="required|number" name="sort"  class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" >图标样式</label>
+                    <div class="layui-input-inline"  style="width: 200px;">
+                        <input type="text" name="iconClass" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button lay-submit lay-filter="typeForm"  id="submitBtn" style="background-color: blueviolet" class="layui-btn layui-btn-radius layui-btn-normal" >添加</button>
+                    <button type="reset"  class="layui-btn layui-btn-radius layui-btn-primary" id="LAY-component-form-setval">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script th:src="@{/layui/layui.js}"></script>
+<!--  <script th:src="@{/layui/jquery-3.4.1.min.js}"></script>-->
+<script type="text/javascript">
+
+    layui.use(['jquery', 'layer','form','table'], function(){
+        let $ = layui.$ //重点处
+            ,layer = layui.layer
+            ,table=layui.table
+            ,form=layui.form;
+
+        $(function () {
+
+            //监听提交
+            form.on('submit(typeForm)', function (data) {
+                let formData = new FormData(data.form);
+                $.ajax({
+                    url: "/pages/back/type/add",
+                    contentType: false,
+                    context : document.body,
+                    data: formData,
+                    dataType: 'json',
+                    processData: false,
+                    success: function(res){
+                        if(res.res){
+                            layer.msg(res.msg);
+                        }
+                    },
+                    type: 'post'
+                });
+                return false; //阻止form表单发送请求到当前页面，造成页面的刷新
+            });
+
+        });
+
+    });
+</script>
+</body>
+</html>

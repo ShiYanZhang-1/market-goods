@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="assets/css/layui.css">
+    <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="icon" href="/favicon.ico">
+    <title>管理后台</title>
+</head>
+<body class="login-wrap">
+    <div class="login-container">
+        <form class="login-form" action="index.html">
+            <div class="input-group">
+                <input type="text" id="username" class="input-field">
+                <label for="username" class="input-label">
+                    <span class="label-title">用户名</span>
+                </label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" class="input-field">
+                <label for="password" class="input-label">
+                    <span class="label-title">密码</span>
+                </label>
+            </div>
+            <button type="submit" class="login-button">登录<i class="ai ai-enter"></i></button>
+        </form>
+    </div>
+</body>
+<script src="/layui/layui.js"></script>
+<script>
+    layui.define(['element'],function(exports){
+
+        var $ = layui.$;
+        $('.input-field').on('change',function(){
+            var $this = $(this),
+                value = $.trim($this.val()),
+                $parent = $this.parent();
+
+            if(value !== '' && !$parent.hasClass('field-focus')){
+                $parent.addClass('field-focus');
+            }else{
+                $parent.removeClass('field-focus');
+            }
+        })
+        exports('login');
+    });
+
+
+    /**
+     *  入口文件索引
+     *  使用说明：将此文件引入到页面中，可在script标签上定义一个data-main=""属性，
+     *  此属性指定页面入口文件。
+     *
+     **/
+    (function () {
+
+        var entry,
+            // 配置所有应用的入口文件，程序将会按照data-main属性中设置的值进行索引查找
+            // 如果你在引入此脚本的script标签上没有设置data-main属性，程序将会默认访问home.js文件
+            app = {
+                home : '{/}home',
+                login : '{/}login'
+            };
+
+        (function(){
+
+            var dataMain, scripts = document.getElementsByTagName('script'),
+                eachScripts = function(el){
+                    dataMain = el.getAttribute('data-main');
+                    if(dataMain){
+                        entry = dataMain;
+                    }
+                };
+
+            [].slice.call(scripts).forEach(eachScripts);
+
+        })();
+
+        layui.config({
+            base: 'layui/lay/modules/'
+        }).extend(app).use(entry || 'home');
+
+    })();
+</script>
+</html>

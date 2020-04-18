@@ -1,0 +1,26 @@
+server:
+  port: 80 #\u542F\u52A8\u7AEF\u53E3
+  max-http-header-size: 102400
+
+spring:
+  thymeleaf:
+    cache: false #\u5173\u95EDthymeleaf\u7F13\u5B58
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/goods_market_db?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
+
+# 打印sql
+logging:
+  level:
+    com:
+      springboot:
+        test:
+          mapper: debug
